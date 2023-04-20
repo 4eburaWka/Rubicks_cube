@@ -192,7 +192,7 @@ class RubeCube {
     * Input - None
     * Output - None
     */
-    Scramble() {
+    Scramble(count=0) {
         let colors = ['w','y','r','g','b','o'];
         let direction = ['cw', 'ccw'];
         let counter = 0;
@@ -205,7 +205,7 @@ class RubeCube {
             this.Move(randColor,randDir,true,40);
             // this.Move(colors[setSteps[counter]],direction[setDir[counter]], true, 150);
             counter++;
-            if (counter >= 0){
+            if (counter >= count){
                 clearInterval(intervalId);
             }
         }, 60);

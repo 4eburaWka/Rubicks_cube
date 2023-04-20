@@ -14,7 +14,7 @@ def get_time(milliseconds: int):
     minutes %= 60
     seconds %= 60
     milliseconds %= 10
-    return f"{hours}:{minutes}:{seconds}:{milliseconds}"
+    return f"{hours:02}:{minutes:02}:{seconds:02}:{milliseconds}"
 
 
 def index(request):
@@ -28,12 +28,33 @@ def index(request):
 
 
 def leaders(request):
-    users = User.objects.all().order_by('milliseconds')[:10]
-    usernames = [i.username for i in users]
-    times = [get_time(user.milliseconds) for user in users]
+    users = User.objects.filter(milliseconds__isnull=False).order_by('milliseconds')
+    positions, usernames, times = [], [], []
+    position = 0
+
+    for i, user in enumerate(users[:10], start=1):
+        positions.append(i)
+        usernames.append(user.username)
+        times.append(get_time(user.milliseconds))
+        if request.user == user:
+            position = i
+
+    if not request.user.is_anonymous:
+        user = request.user
+        if position == 0 or position > 10:
+            positions.pop()
+            usernames.pop()
+            times.pop()
+            position = users.filter(milliseconds__lte=user.milliseconds).count()  # получить место текущего пользователя
+            positions.append(position)
+            usernames.append(user.username)
+            times.append(get_time(user.milliseconds))
+
     context = {
-        'leaders': zip(usernames, times),
+        'leaders': zip(positions, usernames, times),
+        'user_position': position,
     }
+
     return render(request, 'cube/leaders.html', context)
 
 

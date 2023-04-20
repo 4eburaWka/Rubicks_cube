@@ -10,22 +10,22 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/lead_style.css' %}">
 </head>
 <body>
-    <ul class="navbar-menu">
-      <li><a class="main_link" href="{% url 'index' %}">Главная</a></li>
-      <li><a class="leaders_link" href="{% url 'leaders' %}">Таблица лидеров</a></li>
-      {% if user.is_authenticated %}
-        <li><a class="signin_link" href="{% url 'users:logout' %}">Выйти</a></li>
-      {% else %}
-        <li><a class="signin_link" href="{% url 'users:login' %}">Войти</a></li>
-      {% endif %}
-    </ul>
+    {% include 'cube/menu.html' %}
     <table>
-        {% for username, time in leaders %}
-            <tr class="leader">
-            <td class="pos">{{ forloop.counter }}</td>
-            <td class="nick">{{ username }}</td>
-            <td class="time">{{ time }}</td>
-        </tr>
+        {% for position, username, time in leaders %}
+            {% if forloop.counter == 10 and user_position > 9 or forloop.counter == user_position %}
+                <tr class="leader" style="background-color: rgba(143,209,158,0.47)">
+                    <td class="pos">{{ user_position }}</td>
+                    <td class="nick">{{ user.username }}</td>
+                    <td class="time">{{ time }}</td>
+                </tr>
+            {% else %}
+                <tr class="leader">
+                    <td class="pos">{{ position }}</td>
+                    <td class="nick">{{ username }}</td>
+                    <td class="time">{{ time }}</td>
+                </tr>
+            {%  endif %}
         {% endfor %}
     </table>
 </body>

@@ -137,7 +137,7 @@ window.addEventListener('resize', resizeScene);
 let isScrambled = false;
 // For timer
 function scramble_cube() {
-  rubeCube.Scramble();
+  rubeCube.Scramble(50);
   setTimeout(() => {
     isScrambled = true;
   }, 3500);

@@ -19,15 +19,7 @@
     <script type ="text/javascript" src="{% static 'Components/RubeCube.js' %}"></script>
     <script type ="text/javascript" src="{% static 'Components/CubeSolver.js' %}"></script>
 
-    <ul class="navbar-menu">
-      <li><a class="main_link" href="{% url 'index' %}">Главная</a></li>
-      <li><a class="leaders_link" href="{% url 'leaders' %}">Таблица лидеров</a></li>
-      {% if user.is_authenticated %}
-        <li><a class="signin_link" href="{% url 'users:logout' %}">Выйти</a></li>
-      {% else %}
-        <li><a class="signin_link" href="{% url 'users:login' %}">Войти</a></li>
-      {% endif %}
-    </ul>
+    {% include 'cube/menu.html' %}
 
     <div id="main">
       <script type ="text/javascript" src="{% static 'main.js' %}"></script>

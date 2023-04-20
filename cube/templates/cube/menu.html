@@ -1,0 +1,9 @@
+<ul class="navbar-menu">
+  <li><a class="main_link" href="{% url 'index' %}">Главная</a></li>
+  <li><a class="leaders_link" href="{% url 'leaders' %}">Таблица лидеров</a></li>
+  {% if user.is_authenticated %}
+    <li><a class="signin_link" href="{% url 'users:logout' %}">Выйти</a></li>
+  {% else %}
+    <li><a class="signin_link" href="{% url 'users:login' %}">Войти</a></li>
+  {% endif %}
+</ul>
