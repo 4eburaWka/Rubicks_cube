@@ -1,0 +1,176 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background: #04021E;
+}
+#main {
+    display: block;
+    position: absolute;
+}
+.but_left {
+    position: absolute;
+    top: 93%;
+    width: 7%;
+    height: 4%;
+    color: black;
+    border-radius: 5px;
+    transition: .2s;  
+    border-width: 0px;
+}
+.but_left:hover {
+    opacity: 0.8;
+}
+.but_left::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/turn_left.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50px;
+    transition: .3s;    
+}
+.but_left:hover::before {
+    transform: rotate(-20deg);
+}
+.but_right {
+    position: absolute;
+    top: 93%;
+    width: 7%;
+    height: 4%;
+    color: black;
+    border-radius: 5px;
+    transition: .2s;  
+    border-width: 0px;
+}
+.but_right:hover {
+    opacity: 0.8;
+}
+.but_right::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/turn_right.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 52px;
+    transition: .3s;    
+}
+.but_right:hover::before {
+    transform: rotate(20deg);
+}
+.scramble_btn {
+    position: absolute;
+    top: 93%;
+    width: 14.4%;
+    height: 4%;
+    left: 85.4%;
+    background-color: #00ff26;
+    background-image: url("../images/randomize.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 52px;
+    border-radius: 5px;
+    transition: .2s;  
+    border-width: 0px;
+}
+.scramble_btn:hover {
+    opacity: 0.8;
+}
+
+.timer_block {
+    position: absolute;
+    top: 65px;
+    right: 5%;
+    width: 170px;
+}
+.timer {
+    padding: 7px;
+    font-family: monospace;
+    font-weight: 500;
+    font-size: 23px;
+    text-align: center;
+    background-color: rgba(123, 79, 199, 0.665);
+    color: rgb(110, 184, 110);
+    user-select: none;
+    border-radius: 10px;
+    margin-bottom: 7px;
+}
+.timer span {
+    display: inline-block;
+    margin: 0;
+}
+.start_timer_btn {
+    width: 75%;
+    height: 40px;
+    background-color: chartreuse;
+    border-width: 0px;
+    border-radius: 5px;
+}
+.start_timer_btn:hover {
+    opacity: 0.8;
+}
+.reset_timer_btn {
+    top: 12%;
+    width: 22%;
+    height: 40px;
+    background-color: rgb(0, 172, 211);
+    border-width: 0px;
+    border-radius: 5px;
+}
+.reset_timer_btn:hover {
+    opacity: 0.8;
+}
+.stop_timer_btn {
+    left: 81%;
+    width: 100%;
+    height: 40px;
+    background-color: rgb(255, 0, 38);
+    border-width: 0px;
+    border-radius: 5px;
+}
+.stop_timer_btn:hover {
+    opacity: 0.8;
+}
+.navbar-menu{
+    display: flex;
+    justify-content: center;
+    height: 55px;
+    align-items: center;
+    background: linear-gradient(to top left, rgb(59, 1, 60), rgb(17, 2, 67));
+    text-decoration: none;
+    list-style-type: none;
+}
+.navbar-menu li{
+    margin-right: 40px;
+}
+.navbar-menu a{
+    font-size: 25px;
+    font-family: arial;
+    text-decoration: none;
+    color: aliceblue;
+    transition: all .13s ease-in-out;
+    height: 30px;
+    width: 50px;
+}
+.navbar-menu:hover{
+    transition: all .3s ease-in-out;
+    background: #5f06a2;
+}
+.main_link:hover {
+    color: #028aeb;
+}
+.leaders_link:hover{
+    color: #EDF513;
+}
+.signin_link:hover{
+    color: #00ff26;
+}
