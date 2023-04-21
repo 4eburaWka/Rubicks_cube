@@ -39,8 +39,8 @@ def leaders(request):
         if request.user == user:
             position = i
 
-    if not request.user.is_anonymous:
-        user = request.user
+    user = request.user
+    if not user.is_anonymous and user.milliseconds:
         if position == 0 or position > 10:
             positions.pop()
             usernames.pop()

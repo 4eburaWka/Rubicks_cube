@@ -14,7 +14,7 @@
     <table>
         {% for position, username, time in leaders %}
             {% if forloop.counter == 10 and user_position > 9 or forloop.counter == user_position %}
-                <tr class="leader" style="background-color: rgba(143,209,158,0.47)">
+                <tr class="leader" style="background-color: rgba(190,225,110,0.72)">
                     <td class="pos">{{ user_position }}</td>
                     <td class="nick">{{ user.username }}</td>
                     <td class="time">{{ time }}</td>

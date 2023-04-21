@@ -47,10 +47,6 @@ pointLight8.position.z = -7;
 
 var rubeCube = new RubeCube();
 var cubeSolver = new CubeSolver(rubeCube);
-// var cilinder = new THREE.CylinderGeometry(3, 3, 5, 32, 1);
-// var cilinder_material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-// var hiding_cylinder = new THREE.Mesh(cilinder, cilinder_material);
-// hiding_cylinder.position.set(0, 0, 0);
 
 //Adding objects to scene
 scene.add(pointLight1);
@@ -106,7 +102,6 @@ function getPointLight(intensity, color) {
 function ContinuousRender(renderer, scene, camera, controls) {
   renderer.render(scene, camera);
   controls.update();
-  //console.log("isAnimating")
   TWEEN.update();
   requestAnimationFrame(() => ContinuousRender(renderer, scene, camera, controls))
 }
@@ -164,10 +159,6 @@ function stop_timer(){
       button.style.display = '';
     })
   if (rubeCube.IsSolved()){
-    // xhr.open('POST', '/save-time/');
-    // xhr.setRequestHeader('Content-Type', 'application/json');
-    // xhr.send(JSON.stringify({'milliseconds': timer.get_miliseconds()}));
-
     postData('/save-time/', {milliseconds: timer.get_miliseconds()});
   }
 }
@@ -186,7 +177,7 @@ const postData = async (url = '', data = {}) => {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify({milliseconds: 30})
   });
   return response.json();
 }
