@@ -68,20 +68,38 @@ camera.position.y = 5;
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 //Renderer Creation
-var renderer = new THREE.WebGLRenderer();
+var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight - 58);
 renderer.setClearColor('#070239');
 
 document.getElementById('main').appendChild(renderer.domElement)
 var controls = new THREE.OrbitControls(camera, renderer.domElement)
 controls.enablePan = false;
+controls.screenSpacePanning = false;
+controls.minDistance = 4;
+controls.maxDistance = 30;
 // controls.enableZoom = false;
 // controls.mouseButtons.MIDDLE = null;
 
 ContinuousRender(renderer, scene, camera, controls);
 
-const xhr = new XMLHttpRequest();
-
+document.addEventListener("keydown", function(event) {
+  let direction = 'cw';
+  if (event.shiftKey)
+    direction = 'ccw';
+  if (event.code === 'KeyW')
+    moveFace('w', direction, true, 100);
+  else if (event.code === 'KeyY')
+    moveFace('y', direction, true, 100);
+  else if (event.code === 'KeyR')
+    moveFace('r', direction, true, 100);
+  else if (event.code === 'KeyO')
+    moveFace('o', direction, true, 100);
+  else if (event.code === 'KeyG')
+    moveFace('g', direction, true, 100);
+  else if (event.code === 'KeyB')
+    moveFace('b', direction, true, 100);
+});
 // --------------- FUNCTIONS -------------------------------------------------------------------
 function getCube(s, color) {
   var geometry = new THREE.BoxGeometry(s, s, s);
@@ -159,7 +177,7 @@ function stop_timer(){
       button.style.display = '';
     })
   if (rubeCube.IsSolved()){
-    postData('/save-time/', {milliseconds: timer.get_miliseconds()});
+    send_time(timer.get_miliseconds);
   }
 }
 
@@ -171,13 +189,13 @@ function moveFace(color, direction, animating, turnTime) {
   }
 }
 
-const postData = async (url = '', data = {}) => {
-  const response = await fetch(url, {
+const send_time = async (time) => {
+  const response = await fetch('/save-time/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({milliseconds: 30})
+    body: JSON.stringify({milliseconds: time})
   });
   return response.json();
 }

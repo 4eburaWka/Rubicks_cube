@@ -22,7 +22,19 @@
                         {% if form.errors %}
                             <div class="alert alert-warning alert-dismissible fade show" role="alert"
                                  style="margin-top: 50px;">
-                                {{ form.non_field_errors }}
+                                {% for error in form.errors %}
+                                    <ul>
+                                        {% for field in form %}
+                                          {% if field.errors %}
+                                            <ul>
+                                              {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                              {% endfor %}
+                                            </ul>
+                                          {% endif %}
+                                        {% endfor %}
+                                      </ul>
+                                {% endfor %}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>

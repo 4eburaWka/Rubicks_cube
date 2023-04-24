@@ -29,9 +29,8 @@ def register(request):
             form.save()
             messages.success(request, "Вы успешно зарегистрировались!")
             return HttpResponseRedirect(reverse('users:login'))
-        else:
-            print(form.errors)
-    form = UserRegistrationForm()
+    else:
+        form = UserRegistrationForm()
     context = {'form': form}
     return render(request, 'users/register.html', context)
 

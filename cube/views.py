@@ -7,22 +7,13 @@ from users.models import User
 import json
 
 
-def get_time(milliseconds: int):
-    seconds = int(milliseconds / 10)
-    minutes = int(seconds / 60)
-    hours = int(minutes / 60)
-    minutes %= 60
-    seconds %= 60
-    milliseconds %= 10
-    return f"{hours:02}:{minutes:02}:{seconds:02}:{milliseconds}"
-
-
 def index(request):
     colors = ['white', 'yellow', 'red', 'orange', 'blue', 'green']
     # Buttons are paired
     pos = [(str(0.2 + i * 2 * 7.1), str(0.2 + (i * 2 + 1) * 7.1)) for i in range(6)]
     context = {
         'colors_pos': zip(colors, pos),
+        'high_graphics': True,
     }
     return render(request, 'cube/index.html', context)
 
@@ -35,7 +26,7 @@ def leaders(request):
     for i, user in enumerate(users[:10], start=1):
         positions.append(i)
         usernames.append(user.username)
-        times.append(get_time(user.milliseconds))
+        times.append(user.get_time())
         if request.user == user:
             position = i
 
@@ -48,7 +39,7 @@ def leaders(request):
             position = users.filter(milliseconds__lte=user.milliseconds).count()  # получить место текущего пользователя
             positions.append(position)
             usernames.append(user.username)
-            times.append(get_time(user.milliseconds))
+            times.append(user.get_time())
 
     context = {
         'leaders': zip(positions, usernames, times),
@@ -65,7 +56,10 @@ def save_time(request):
         data = json.loads(request.body.decode('utf-8'))
         milliseconds = data['milliseconds']
         user = request.user
-        if milliseconds is not None and milliseconds < user.milliseconds:
+        if user.milliseconds is None:
+            user.milliseconds = milliseconds
+            user.save()
+        elif milliseconds < user.milliseconds:
             user.milliseconds = milliseconds
             user.save()
     return HttpResponseRedirect(reverse('index'))

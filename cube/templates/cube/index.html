@@ -25,6 +25,13 @@
       <script type ="text/javascript" src="{% static 'main.js' %}"></script>
     </div>
 
+    {% if user.milliseconds %}
+    <div class="user_record">
+        Лучший результат: <br>
+        {{ user.get_time }}
+    </div>
+    {% endif %}
+
     <div class="timer_block">
       <div id="timer" class="timer">00:00:00:0</div>
       <button id="start_timer_btn" class="start_timer_btn" onclick="start_timer()"></button>
