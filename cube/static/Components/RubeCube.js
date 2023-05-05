@@ -1,21 +1,22 @@
-/*
-* Definition - RubeCube class represents the definitions of a Rubick's cube.
-* Fields: 
-*  cubePiece: Array - Array of 26 pieces which make up a rubick's cube (excludes the centre/core piece)
-*  visualCube: THREE.Object3D() - Represents a thee.js group/object containing all cube pieces
-*/
-function matching(arr1, arr2){
+function matching(arr1, arr2) {
     for (let i = 0; i < arr1.length; i++)
         if (!(arr1[i] === arr2[i]))
             return false;
     return true;
 }
+
+/*
+* Definition - RubeCube class represents the definitions of a Rubick's cube.
+* Fields:
+*  cubePiece: Array - Array of 26 pieces which make up a rubick's cube (excludes the centre/core piece)
+*  visualCube: THREE.Object3D() - Represents a thee.js group/object containing all cube pieces
+*/
 class RubeCube {
     constructor() {
         this.cubePieces = this.CreateCubePieces();
         this.visualCube = this.CreateVisualCube(this.cubePieces);
         this.tween = null;
-        this.moveHistory = [[],[]];
+        this.moveHistory = [[], []];
     }
 
     /*
@@ -26,11 +27,11 @@ class RubeCube {
     */
     CreateCubePieces() {
         let pieces = [];
-        for (let y = -1; y <= 1; y++){
-            for (let x = -1; x<=1; x++) {
-                for (let z = -1; z<=1; z++) {
-                    if (x !== 0 || y !== 0 || z !== 0){
-                        let piece = new Piece([x,y,z], 1);
+        for (let y = -1; y <= 1; y++) {
+            for (let x = -1; x <= 1; x++) {
+                for (let z = -1; z <= 1; z++) {
+                    if (x !== 0 || y !== 0 || z !== 0) {
+                        let piece = new Piece([x, y, z], 1);
                         pieces.push(piece);
                     }
                 }
@@ -45,17 +46,17 @@ class RubeCube {
     * Input - cubePieces: Array
     * Output - None
     */
-    VisualyPositionCubes(cubePieces){
+    VisualyPositionCubes(cubePieces) {
         cubePieces.forEach(piece => {
             let size = piece.cube.geometry.parameters.height;
             // cubePosition contains the actual piece's visual coordinates based on piece's size
-            let cubePosition = piece.solvedLocation.map(element => size*element);
+            let cubePosition = piece.solvedLocation.map(element => size * element);
             // spacingFactor defines how closely the pieces will appear
             let spacingFactor = 0.05;
             piece.cube.position.set(
-                cubePosition[0] + cubePosition[0]*spacingFactor, 
-                cubePosition[1]+ cubePosition[1]*spacingFactor, 
-                cubePosition[2]+ cubePosition[2]*spacingFactor
+                cubePosition[0] + cubePosition[0] * spacingFactor,
+                cubePosition[1] + cubePosition[1] * spacingFactor,
+                cubePosition[2] + cubePosition[2] * spacingFactor
             );
         })
     }
@@ -66,7 +67,7 @@ class RubeCube {
     * Input - cubePieces: Array
     * Output - visualCube: THREE.Object3D()
     */
-    CreateVisualCube(cubePieces){
+    CreateVisualCube(cubePieces) {
         // Positioning pieces
         this.VisualyPositionCubes(cubePieces);
         // Coloring pieces
@@ -108,34 +109,36 @@ class RubeCube {
     * Output - None
     */
     Move(color, direction, animating, turnTime = 200) {
-        if (this.tween === null){
+        if (this.tween === null) {
             isScrambled = false;
-            if (animating) {this.MoveVisual(color, direction, turnTime);}
-            
+            if (animating) {
+                this.MoveVisual(color, direction, turnTime);
+            }
+
             let piecesOnFace = this.GetPiecesOnFace(color);
             let faceOrientation = Face.ColorToOrientation[color];
-    
-            piecesOnFace.forEach(function(piece) {
-                let multiplier = (direction==="cw")? -1:1;
-                piece.location = CrossProduct(faceOrientation, piece.location).map(element => multiplier*element);
-                piece.faces.forEach(function(face) {
-                    if (Face.OrientationToColor[face.orientation] !== color){
-                        face.orientation = CrossProduct(faceOrientation, face.orientation).map(element => multiplier*element);
+
+            piecesOnFace.forEach(function (piece) {
+                let multiplier = (direction === "cw") ? -1 : 1;
+                piece.location = CrossProduct(faceOrientation, piece.location).map(element => multiplier * element);
+                piece.faces.forEach(function (face) {
+                    if (Face.OrientationToColor[face.orientation] !== color) {
+                        face.orientation = CrossProduct(faceOrientation, face.orientation).map(element => multiplier * element);
                     }
                 })
             })
             // Index of the nonzero value in faceOrientation
             let nonZeroIndex = faceOrientation.findIndex(element => element === 1 || element === -1);
             piecesOnFace.forEach(piece => piece.location[nonZeroIndex] = faceOrientation[nonZeroIndex]);
-            
-            
+
+
         }
     }
 
-    IsSolved(){
+    IsSolved() {
         let flag = true
-        this.cubePieces.forEach(function(piece, i, arr){
-            if (!matching(piece.location, piece.solvedLocation)) 
+        this.cubePieces.forEach(function (piece, i, arr) {
+            if (!matching(piece.location, piece.solvedLocation))
                 flag = false;
         })
         return flag;
@@ -157,13 +160,13 @@ class RubeCube {
         piecesOnFace.forEach(piece => {
             pivotGroup.add(piece.cube);
         })
-        let rotationVal = (direction === "cw")? -Math.PI/2:Math.PI/2;
+        let rotationVal = (direction === "cw") ? -Math.PI / 2 : Math.PI / 2;
         // rotationOfPivot is the array representing the roation of the pivot group
         // ex: rotationPivot = [0,PI/2,0] -> Rotate 90º ccw around the y axis
-        let rotationOfPivot = Face.ColorToOrientation[color].map(value => value*rotationVal);
+        let rotationOfPivot = Face.ColorToOrientation[color].map(value => value * rotationVal);
 
-        let orientation = {x:0, y:0, z:0};
-        let target = {x:rotationOfPivot[0], y:rotationOfPivot[1], z:rotationOfPivot[2]};
+        let orientation = {x: 0, y: 0, z: 0};
+        let target = {x: rotationOfPivot[0], y: rotationOfPivot[1], z: rotationOfPivot[2]};
         this.tween = new TWEEN.Tween(orientation).to(target, turnTime);
         this.tween.onUpdate(() => {
             pivotGroup.rotation.set(orientation.x, orientation.y, orientation.z);
@@ -192,20 +195,20 @@ class RubeCube {
     * Input - None
     * Output - None
     */
-    Scramble(count=0) {
-        let colors = ['w','y','r','g','b','o'];
+    Scramble(count = 0) {
+        let colors = ['w', 'y', 'r', 'g', 'b', 'o'];
         let direction = ['cw', 'ccw'];
         let counter = 0;
-        
+
         let intervalId = setInterval(() => {
             let randColor = colors[Math.floor(Math.random() * 6)];
             let randDir = direction[Math.floor(Math.random() * 2)];
             this.moveHistory[0].push(randColor);
             this.moveHistory[1].push(randDir);
-            this.Move(randColor,randDir,true,40);
+            this.Move(randColor, randDir, true, 40);
             // this.Move(colors[setSteps[counter]],direction[setDir[counter]], true, 150);
             counter++;
-            if (counter >= count){
+            if (counter >= count) {
                 clearInterval(intervalId);
             }
         }, 60);
@@ -216,7 +219,7 @@ class RubeCube {
         this.cubePieces.forEach(piece => {
             let isType = piece.type === pieceType;
             let isColor = piece.ContainsColor(color);
-            if (isType && isColor){
+            if (isType && isColor) {
                 piecesOfType.push(piece);
             }
         })
@@ -225,8 +228,8 @@ class RubeCube {
 }
 
 function CrossProduct(array1, array2) {
-    var x = array1[1]*array2[2] - array1[2]*array2[1];
-    var y = array1[2]*array2[0] - array1[0]*array2[2];
-    var z = array1[0]*array2[1] - array1[1]*array2[0];
-    return [x,y,z];
+    var x = array1[1] * array2[2] - array1[2] * array2[1];
+    var y = array1[2] * array2[0] - array1[0] * array2[2];
+    var z = array1[0] * array2[1] - array1[1] * array2[0];
+    return [x, y, z];
 }

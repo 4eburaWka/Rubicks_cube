@@ -81,122 +81,149 @@ controls.maxDistance = 30;
 // controls.enableZoom = false;
 // controls.mouseButtons.MIDDLE = null;
 
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2()
+
+function onMouseClick(event) {
+    console.log("Нажатие\n");
+    // Нормализуем координаты мыши (от -1 до 1)
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Обновляем позицию луча
+    raycaster.setFromCamera(mouse, camera);
+
+    // Получаем список объектов, пересекающих луч
+    var intersects_piece = raycaster.intersectObjects(scene.children[8].children)[0];
+    // console.log("Пересечение найдено с объектом: ", intersects_piece)
+
+    console.log("Пересечение найдено с объектом: ", intersects_piece);
+    // if (intersects.length > 0) {
+    // }
+}
+
+// Добавляем обработчик события клика мыши на окно
+window.addEventListener('mousedown', onMouseClick, false);
+
 ContinuousRender(renderer, scene, camera, controls);
 
-document.addEventListener("keydown", function(event) {
-  let direction = 'cw';
-  if (event.shiftKey)
-    direction = 'ccw';
-  if (event.code === 'KeyW')
-    moveFace('w', direction, true, 100);
-  else if (event.code === 'KeyY')
-    moveFace('y', direction, true, 100);
-  else if (event.code === 'KeyR')
-    moveFace('r', direction, true, 100);
-  else if (event.code === 'KeyO')
-    moveFace('o', direction, true, 100);
-  else if (event.code === 'KeyG')
-    moveFace('g', direction, true, 100);
-  else if (event.code === 'KeyB')
-    moveFace('b', direction, true, 100);
+document.addEventListener("keydown", function (event) {
+    let direction = 'cw';
+    if (event.shiftKey)
+        direction = 'ccw';
+    if (event.code === 'KeyW')
+        moveFace('w', direction, true, 100);
+    else if (event.code === 'KeyY')
+        moveFace('y', direction, true, 100);
+    else if (event.code === 'KeyR')
+        moveFace('r', direction, true, 100);
+    else if (event.code === 'KeyO')
+        moveFace('o', direction, true, 100);
+    else if (event.code === 'KeyG')
+        moveFace('g', direction, true, 100);
+    else if (event.code === 'KeyB')
+        moveFace('b', direction, true, 100);
 });
+
 // --------------- FUNCTIONS -------------------------------------------------------------------
 function getCube(s, color) {
-  var geometry = new THREE.BoxGeometry(s, s, s);
-  var material = new THREE.MeshPhongMaterial({
-    color: color,
-  });
-  var mesh = new THREE.Mesh(geometry, material);
-  mesh.castShadow = true;
-  return mesh;
+    var geometry = new THREE.BoxGeometry(s, s, s);
+    var material = new THREE.MeshPhongMaterial({
+        color: color,
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.castShadow = true;
+    return mesh;
 }
 
 function getPointLight(intensity, color) {
-  var light = new THREE.PointLight(color, intensity);
-  light.castShadow = true;
-  return light;
+    var light = new THREE.PointLight(color, intensity);
+    light.castShadow = true;
+    return light;
 }
 
 function ContinuousRender(renderer, scene, camera, controls) {
-  renderer.render(scene, camera);
-  controls.update();
-  TWEEN.update();
-  requestAnimationFrame(() => ContinuousRender(renderer, scene, camera, controls))
+    renderer.render(scene, camera);
+    controls.update();
+    TWEEN.update();
+    requestAnimationFrame(() => ContinuousRender(renderer, scene, camera, controls))
 }
 
 function Render(renderer, scene, camera) {
-  renderer.render(scene, camera);
+    renderer.render(scene, camera);
 }
 
 function FindSpecificPiece(cube, solvedLoc) {
-  var toReturn;
-  cube.cubePieces.forEach(piece => {
-    var x = piece.solvedLocation[0] == solvedLoc[0];
-    var y = piece.solvedLocation[1] == solvedLoc[1];
-    var z = piece.solvedLocation[2] == solvedLoc[2];
-    if (x && y && z) {
-      toReturn = piece;
-    }
-  })
-  return toReturn;
+    var toReturn;
+    cube.cubePieces.forEach(piece => {
+        var x = piece.solvedLocation[0] == solvedLoc[0];
+        var y = piece.solvedLocation[1] == solvedLoc[1];
+        var z = piece.solvedLocation[2] == solvedLoc[2];
+        if (x && y && z) {
+            toReturn = piece;
+        }
+    })
+    return toReturn;
 }
+
 function resizeScene() {
-  renderer.setSize(window.innerWidth, window.innerHeight - 58);
-  camera.aspect = window.innerWidth / (window.innerHeight - 58);
-  camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight - 58);
+    camera.aspect = window.innerWidth / (window.innerHeight - 58);
+    camera.updateProjectionMatrix();
 }
 
 window.addEventListener('resize', resizeScene);
 let isScrambled = false;
+
 // For timer
 function scramble_cube() {
-  rubeCube.Scramble(50);
-  setTimeout(() => {
-    isScrambled = true;
-  }, 3500);
+    rubeCube.Scramble(50);
+    setTimeout(() => {
+        isScrambled = true;
+    }, 3500);
 }
 
 function start_timer() {
-  timer.reset();
-  if (isScrambled){
-    let buttons = [document.getElementById('start_timer_btn'), document.getElementById('reset_timer_btn')];
-    buttons.forEach(button => {
-      button.style.display = 'none';
-    })
-    document.getElementById('stop_timer_btn').style.display = '';
-    timer.start(true, 'timer');
-  } else scramble_cube();
+    timer.reset();
+    if (isScrambled) {
+        let buttons = [document.getElementById('start_timer_btn'), document.getElementById('reset_timer_btn')];
+        buttons.forEach(button => {
+            button.style.display = 'none';
+        })
+        document.getElementById('stop_timer_btn').style.display = '';
+        timer.start(true, 'timer');
+    } else scramble_cube();
 }
 
-function stop_timer(){
-  timer.stop();
-  isScrambled = false;
-  document.getElementById('stop_timer_btn').style.display = 'none';
-  let buttons = [document.getElementById('start_timer_btn'), document.getElementById('reset_timer_btn')];
+function stop_timer() {
+    timer.stop();
+    isScrambled = false;
+    document.getElementById('stop_timer_btn').style.display = 'none';
+    let buttons = [document.getElementById('start_timer_btn'), document.getElementById('reset_timer_btn')];
     buttons.forEach(button => {
-      button.style.display = '';
+        button.style.display = '';
     })
-  if (rubeCube.IsSolved()){
-    send_time(timer.get_miliseconds);
-  }
+    if (rubeCube.IsSolved()) {
+        send_time(timer.get_miliseconds());
+    }
 }
 
 function moveFace(color, direction, animating, turnTime) {
-  rubeCube.Move(color, direction, animating, turnTime);
-  if (timer.isStarted && rubeCube.IsSolved()) {
-    stop_timer();
-    
-  }
+    rubeCube.Move(color, direction, animating, turnTime);
+    if (timer.isStarted && rubeCube.IsSolved()) {
+        stop_timer();
+
+    }
 }
 
 const send_time = async (time) => {
-  const response = await fetch('/save-time/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({milliseconds: time})
-  });
-  return response.json();
+    const response = await fetch('/save-time/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({milliseconds: time})
+    });
+    return response.json();
 }
 
