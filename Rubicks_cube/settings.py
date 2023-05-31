@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#@zy$tv)j@!egktchv)^^uesbz=wy)uqsfrg(%j2$^bdz#e#(l
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://8ffc-2a02-bf0-6818-7e3d-9828-8d84-a90-5912.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://rubicks-cube.herokuapp.com']
 
 # Application definition
 
